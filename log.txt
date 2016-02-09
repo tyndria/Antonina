@@ -1,0 +1,11 @@
+commit ea129699bda57d63876de67812c06af351471ce4
+Author: tyndria <tyndria23@gmail.com>
+Date:   Tue Feb 9 15:24:46 2016 +0200
+
+    Add status.txt
+
+commit 04c4c383b081392b6e687bf1adf7ec2e9904973b
+Author: tyndria <tyndria23@gmail.com>
+Date:   Tue Feb 9 15:20:38 2016 +0200
+
+    Add .gitignore
