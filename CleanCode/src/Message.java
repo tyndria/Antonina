@@ -60,7 +60,7 @@ public class Message implements Comparable<Message>{
     }
 
     public String toString() {
-        return "Id: "+ this.id + "; Author: " + this.author + " - " + "'" + this.message + "'" + "; At: " + " " + Long.toString(this.time.getTime());
+        return "Id: "+ this.id + "; Author: " + this.author + " - " + "'" + this.message + "'" + "; At: " + " " + this.time.toString();
     }
 
     public int compareTo(Message m) {
