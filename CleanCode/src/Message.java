@@ -20,14 +20,6 @@ public class Message implements Comparable<Message>{
         this.id = Long.toString(Math.abs(random.nextLong()));
     }
 
-    public Message(String author) {
-        this.author = author;
-        this.message = null;
-        this.time = new Timestamp(new Date().getTime());
-        Random random = new Random();
-        this.id = Long.toString(Math.abs(random.nextLong()));
-    }
-
     public String getId() {
         return id;
     }

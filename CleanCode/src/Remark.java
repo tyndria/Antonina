@@ -7,8 +7,6 @@ public class Remark {
     private String input;
     private String details;
 
-    public Remark() { type = name = input = details = null;}
-
     public Remark(String type, String name, String input, String details) {
         this.type = type;
         this.name = name;
