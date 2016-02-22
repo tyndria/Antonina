@@ -1,6 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.org.apache.xml.internal.serializer.utils.Messages;
+
 
 import javax.json.Json;
 import javax.json.JsonReader;
@@ -19,12 +19,16 @@ import java.util.regex.Pattern;
 public class Chat extends ArrayList<Message>{
     private List<Remark> remarks;
     private Scanner scanner;
-    private PrintWriter writerForLogfile;
     public Chat() {
         super();
+        remarks = new ArrayList<>();
+        scanner = new Scanner(System.in);
+    }
+
+    public Scanner getScanner() { return this.scanner;}
+
+    public void loadHistory () {
         try {
-            remarks = new ArrayList<Remark>();
-            //writerForLogfile = new PrintWriter("logfile.txt");
             Scanner scannerFile = new Scanner(new File("Output.json"));
             String historyInJson = scannerFile.nextLine();
             JsonReader reader = Json.createReader(new StringReader(historyInJson));
@@ -38,20 +42,7 @@ public class Chat extends ArrayList<Message>{
             System.out.println(e.getMessage());
             remarks.add(new Remark("Exception", e.getClass().getName(), "trying to get history", e.getMessage()));
         }
-        scanner = new Scanner(System.in);
-
-
     }
-
-    public boolean add(Message message) {
-        return super.add(message);
-    }
-
-    public PrintWriter getWriterForLogfile() {
-        return this.writerForLogfile;
-    }
-
-    public Scanner getScanner() { return this.scanner;}
 
     public void showHistory () {
         System.out.println("If you want to see all history enter 'all'." + "\n" + "If you want to see history for the definite period enter 'def'");
@@ -67,9 +58,16 @@ public class Chat extends ArrayList<Message>{
     }
 
     public void showAllHistory() {
-        for (Message mes: this) {
+        ArrayList<Message> newArrayMessages = (ArrayList<Message>) this.clone();
+        Collections.sort(newArrayMessages, new Comparator<Message>() {
+            public int compare(Message o1, Message o2) {
+                return Long.compare(o1.getTime().getTime(), o2.getTime().getTime());
+            }
+        });
+        for (Message mes: newArrayMessages) {
             System.out.println(mes.toString());
         }
+
     }
 
     public void addMessage() {
@@ -78,7 +76,7 @@ public class Chat extends ArrayList<Message>{
         m.setAuthor(scanner.next());
         scanner.nextLine();
         System.out.println("Enter you message.");
-        m.setMessage(scanner.nextLine());
+        m.setText(scanner.nextLine());
         m.setTime();
         m.setId();
         this.add(m);
@@ -86,16 +84,11 @@ public class Chat extends ArrayList<Message>{
 
     public void showDefiniteHistory() {
         int COUNT_PARAM_TIMESTAMP = 7;
-        String[] timestamp = new String[COUNT_PARAM_TIMESTAMP];
-        timestamp[0] = "1970";
-        for (int i = 1; i < timestamp.length - 1; i ++) {
-            timestamp[i] = "01";
-        }
-        timestamp[6] = "0";
+        String[] timestamp = setInitialTimestamp();
         scanner.nextLine();
         System.out.println("Enter the date after what you want to see history. You can write '2015' or '2015 02' or '2015 02 14' and etc. To separate use only ' '");
         Timestamp dateAfter = fromStringToTimestamp(scanner.nextLine(), timestamp);
-        scanner.nextLine();
+        //scanner.nextLine();
         System.out.println("Enter the date before what you want to see history. You can write '2015' or '2015 02' or '2015 02 14' and etc. To separate use only ' '");
         Timestamp dateBefore =  fromStringToTimestamp(scanner.nextLine(), timestamp);
         if (this.isEmpty()) {
@@ -104,71 +97,83 @@ public class Chat extends ArrayList<Message>{
         }
         int frequency = 0;
         for(Message mes: this) {
-            if (mes.getTime().after(dateAfter))
+            if (mes.getTime().after(dateAfter)) {
                 if (mes.getTime().before(dateBefore)) {
                     System.out.println(mes.toString());
-                    frequency ++;
+                    frequency++;
                 }
+            }
         }
         remarks.add(new Remark("request", "search messages for the definite period", "from " + dateAfter.toString() + " to " + dateBefore, "number of founded messages is " + Integer.toString(frequency)));
     }
 
-    public void deleteById() {
+    private String[] setInitialTimestamp() {
+        int COUNT_PARAM_TIMESTAMP = 7;
+        String[] timestamp = new String[COUNT_PARAM_TIMESTAMP];
+        timestamp[0] = "1970";
+        for (int i = 1; i < timestamp.length - 1; i ++) {
+            timestamp[i] = "01";
+        }
+        timestamp[6] = "0";
+        return timestamp;
+    }
+
+    public void deleteMessage() {
         Scanner in = new Scanner(System.in);
         int flag = 0;
-        String idForDelete;
+        String idDelete;
         System.out.println("Enter id to delete message");
-        idForDelete = in.next();
-        List<Message> messagesForDelete = new ArrayList<Message>();
+        idDelete = in.next();
+        List<Message> messagesDelete = new ArrayList<>();
         for (Message mes : this) {
-            if (mes.getId().equals(idForDelete)) {
-                messagesForDelete.add(mes);
+            if (mes.getId().equals(idDelete)) {
+                messagesDelete.add(mes);
                 flag = 1;
             }
         }
-        for (Message mes: messagesForDelete) {
+        for (Message mes: messagesDelete) {
             this.remove(mes);
         }
         if (flag == 1) {
             System.out.println("The message with such id was deleted");
-            remarks.add(new Remark("request", "delete the message by id", idForDelete,"the message with such id was deleted" ));
+            remarks.add(new Remark("request", "delete the message by id", idDelete,"the message with such id was deleted" ));
         }
         else {
-            remarks.add(new Remark("request", "delete the message by id", idForDelete,"the message with such id wasn't deleted because of wrong id" ));
+            remarks.add(new Remark("request", "delete the message by id", idDelete,"the message with such id wasn't deleted because of wrong id" ));
             System.out.println("Wrong id");
         }
     }
 
     public void searchByAuthor() {
         int frequency = 0;
-        String authorForSearch;
+        String authorSearch;
         System.out.println("Enter author for search");
-        authorForSearch = scanner.next();
+        authorSearch = scanner.next();
         for(Message m: this) {
-            if (m.getAuthor().equals(authorForSearch)) {
-                System.out.println("Message from this author: " + m.getMessage() + "\n" +
+            if (m.getAuthor().equals(authorSearch)) {
+                System.out.println("Message from this author: " + m.getText() + "\n" +
                         "Time: " + m.getTime());
                 frequency ++;
             }
         }
         if (frequency > 0) {
-            remarks.add(new Remark("request", "search for author", authorForSearch, "number of the elements with such author: " + Integer.toString(frequency)));
+            remarks.add(new Remark("request", "search for author", authorSearch, "number of the elements with such author: " + Integer.toString(frequency)));
         }
         else {
             System.out.println("Wrong author");
-            remarks.add(new Remark("request", "search for author", authorForSearch, "no such author"));
+            remarks.add(new Remark("request", "search for author", authorSearch, "no such author"));
         }
     }
 
     public void searchByRegularExpression() {
         int frequency = 0;
-        String stringForPattern;
+        String regularExpression;
         Matcher matcher;
         System.out.println("Enter regular expression. For example, '.+@(mail|bk|inbox|list)\\.ru' ");
-        stringForPattern = scanner.next();
-        Pattern p = Pattern.compile(stringForPattern);
+        regularExpression = scanner.next();
+        Pattern p = Pattern.compile(regularExpression);
         for (Message mes: this) {
-            matcher = p.matcher(mes.getMessage());
+            matcher = p.matcher(mes.getText());
             while (matcher.find()) {
                 System.out.println("Found: " + matcher.group());
                 frequency ++;
@@ -176,26 +181,26 @@ public class Chat extends ArrayList<Message>{
         }
         if (frequency == 0) {
             System.out.println("No emails");
-            remarks.add(new Remark("request", "search for regular expressions", stringForPattern, "no such expressions"));
+            remarks.add(new Remark("request", "search for regular expressions", regularExpression, "no such expressions"));
         }
         else {
-            remarks.add((new Remark("request", "search for regular expressions", stringForPattern, "number of the elements: " + Integer.toString(frequency))));
+            remarks.add((new Remark("request", "search for regular expressions", regularExpression, "number of the elements: " + Integer.toString(frequency))));
         }
     }
 
     public void searchByKeyword() {
         int frequency = 0;
-        String wordForSearch;
+        String wordSearch;
         System.out.println("Enter key word you want to find");
-        wordForSearch = scanner.next();
+        wordSearch = scanner.next();
         for (Message mes: this) {
-            if (mes.getMessage().contains(wordForSearch)) {
+            if (mes.getText().contains(wordSearch)) {
                 System.out.println(mes.toString() + "\n");
                 frequency ++;
             }
         }
         if (frequency > 0) {
-            remarks.add(new Remark("request", "search for key word", wordForSearch, "number of the messages with such word: " + Integer.toString(frequency)));
+            remarks.add(new Remark("request", "search for key word", wordSearch, "number of the messages with such word: " + Integer.toString(frequency)));
         }
     }
 
@@ -210,13 +215,15 @@ public class Chat extends ArrayList<Message>{
         return new Timestamp((Timestamp.valueOf(dateString)).getTime());
     }
 
-    public void writeToFile() throws IOException {
-        //this.getWriterForLogfile().close();
+    public void saveToFile() throws IOException {
         Gson gson = new GsonBuilder().create();
         try (Writer writer = new OutputStreamWriter(new FileOutputStream("Output.json"), "UTF-8")) {
-            String history = (gson.toJson(this, this.getClass())).toString();
+            String history = (gson.toJson(this, this.getClass()));
             writer.write(history);
         }
+    }
+
+    public void writeLogfile() throws IOException {
         try (Writer writer = new OutputStreamWriter(new FileOutputStream("logfile.txt", true), "UTF-8")) {
             writer.write(remarks.toString());
         }

@@ -2,7 +2,6 @@
  * Created by Антонина on 09.02.16.
  */
 import java.io.*;
-import java.util.*;
 
 public class Show {
     public static void main (String[] args) throws IOException {
@@ -14,8 +13,10 @@ public class Show {
                     + "3. Press '3' to delete a message. " + "\n"
                     + "4. Press '4' to search by an author." + "\n"
                     + "5. Press '5'to search for regular expressions" + "\n"
-                    + "6. Press '6' to search for a key word" + "\n" +
-                    "If you want to exit enter '0'");
+                    + "6. Press '6' to search for a key word" + "\n"
+                    + "7. Press '7' to save all messages to the history" + "\n"
+                    + "8. Press '8' to load all messages from the history" + "\n"
+                    + "If you want to exit enter '0'");
             menu = chat.getScanner().next();
             switch (menu) {
                 case "1":
@@ -25,7 +26,7 @@ public class Show {
                     chat.showHistory();
                     break;
                 case "3":
-                    chat.deleteById();
+                    chat.deleteMessage();
                     break;
                 case "4":
                     chat.searchByAuthor();
@@ -36,9 +37,15 @@ public class Show {
                 case "6":
                     chat.searchByKeyword();
                     break;
+                case "7":
+                    chat.saveToFile();
+                    break;
+                case "8":
+                    chat.loadHistory();
+                    break;
             }
         }
-            chat.writeToFile();
+            chat.writeLogfile();
     }
 }
 

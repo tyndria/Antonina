@@ -2,20 +2,19 @@
  * Created by Антонина on 09.02.16.
  */
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Random;
 
 public class Message implements Comparable<Message>{
     private String id;
-    private String message;
+    private String text;
     private String author;
     private Timestamp time;
 
     public Message() {
         this.time = new Timestamp(new Date().getTime());
-        this.message = this.author = null;
+        this.text = this.author = null;
         Random random = new Random();
         this.id = Long.toString(Math.abs(random.nextLong()));
     }
@@ -24,8 +23,8 @@ public class Message implements Comparable<Message>{
         return id;
     }
 
-    public String getMessage() {
-        return message;
+    public String getText() {
+        return text;
     }
 
     public String getAuthor() {
@@ -40,8 +39,8 @@ public class Message implements Comparable<Message>{
         this.author = author;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public void setTime() {time.setTime(new Date().getTime());}
@@ -52,7 +51,7 @@ public class Message implements Comparable<Message>{
     }
 
     public String toString() {
-        return "Id: "+ this.id + "; Author: " + this.author + " - " + "'" + this.message + "'" + "; At: " + " " + this.time.toString();
+        return "Id: "+ this.id + "; Author: " + this.author + " - " + "'" + this.text + "'" + "; At: " + " " + this.time.toString();
     }
 
     public int compareTo(Message m) {
