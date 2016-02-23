@@ -1,3 +1,5 @@
+package chat;
+
 /**
  * Created by Антонина on 13.02.16.
  */
