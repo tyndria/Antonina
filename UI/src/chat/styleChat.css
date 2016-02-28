@@ -1,0 +1,127 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Open Sans';
+    min-height: 100%;
+    background-color: grey;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: lightgreen;
+    color: white;
+    padding: 0.5em;
+    border-radius: 4px;
+    font-size: 3em;
+    text-align: center;
+}
+
+.chatContainer {
+    height: 100%;
+    position: relative;
+}
+
+
+.sectionActions {
+    height: 7%;
+    width: 70%;
+    margin: auto;
+    position: relative;
+}
+
+.buttonActions  {
+    background-color: darkgrey;
+    color: white;
+    border-radius: 8px;
+    width: 60px;
+    height: 30px;
+    float: right;
+    font-size: 0.8em;
+}
+
+
+.sectionHistory {
+    height: 60%;
+    width: 70%;
+    overflow-y: scroll;
+    border:5px solid dimgrey;
+    border-radius: 4px;
+    margin: auto;
+}
+
+
+.outputName {
+    color: white;
+    font-style: oblique;
+    font-size: medium;
+    text-align: left;
+}
+
+.outputTime {
+    color: dodgerblue;
+    font-style: normal;
+    font-size: medium;
+    text-align: right;
+}
+
+.outputMessage {
+    width: 80%;
+    color: lightgreen;
+    font-style: normal;
+    font-size: medium;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.outputAction {
+    color: orange;
+    font-style: italic;
+    font-size: medium;
+    text-align: right;
+}
+
+.outputError {
+    width: 20%;
+    color: red;
+    font-size: medium;
+    font-style: italic;
+    text-align: right;
+}
+
+.button {
+    background-color: darkgrey;
+    color: white;
+    border-radius: 8px;
+    width: 60px;
+    height: 30px;
+    font-size: 0.8em;
+}
+
+.sectionAddMessage {
+    height: 10%;
+    width: 70%;
+    margin: auto;
+}
+
+ .inputMessage {
+    width: 60%;
+    padding: 1px;
+    border-radius: 4px;
+    border:3px solid lightgreen;
+    word-wrap: break-word;
+}
+
+.inputName {
+    padding: 1px;
+    border-radius: 4px;
+    border:3px solid lightgreen;
+}
+
+footer {
+    height: 10%;
+    font-size: 1em;
+    color: white;
+}

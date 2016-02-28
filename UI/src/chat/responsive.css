@@ -1,0 +1,37 @@
+@media only screen and (max-width: 670px) {
+    .header {
+        font-size: 1.5em;
+    }
+    .button {
+        width: 45px;
+        height: 25px;
+        font-size: 0.7em;
+    }
+    .buttonActions {
+        width: 45px;
+        height: 25px;
+        font-size: 0.7em;
+    }
+    .sectionHistory {
+        width: 95%;
+    }
+}
+
+@media only screen and (max-width: 250px) {
+    .header {
+        font-size: 0.7em;
+    }
+    .button {
+        width: 20px;
+        height: 10px;
+        font-size: 0.6em;
+    }
+    .buttonActions {
+        width: 20px;
+        height: 10px;
+        font-size: 0.6em;
+    }
+    .sectionHistory {
+        width: 95%;
+    }
+}
