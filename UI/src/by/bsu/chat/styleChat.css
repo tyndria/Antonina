@@ -68,7 +68,7 @@ body {
 }
 
 .outputMessage {
-    width: 80%;
+    width: 90%;
     color: lightgreen;
     font-style: normal;
     font-size: medium;
@@ -77,18 +77,16 @@ body {
 }
 
 .outputAction {
-    color: orange;
-    font-style: italic;
-    font-size: medium;
+    text-align: left;
+}
+
+.outputDoneAction {
     text-align: right;
 }
 
 .outputError {
     width: 20%;
-    color: red;
-    font-size: medium;
-    font-style: italic;
-    text-align: right;
+    text-align: left;
 }
 
 .button {

@@ -1,4 +1,4 @@
-@media only screen and (max-width: 670px) {
+@media only screen and (max-width: 500px) {
     .header {
         font-size: 1.5em;
     }
@@ -6,6 +6,10 @@
         width: 45px;
         height: 25px;
         font-size: 0.7em;
+    }
+
+    .outputMessage {
+        width: 80%;
     }
     .buttonActions {
         width: 45px;
