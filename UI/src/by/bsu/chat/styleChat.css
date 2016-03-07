@@ -62,13 +62,12 @@ body {
 
 .outputTime {
     color: dodgerblue;
-    font-style: normal;
     font-size: medium;
     text-align: right;
 }
 
 .outputMessage {
-    width: 90%;
+    width: 70%;
     color: lightgreen;
     font-style: normal;
     font-size: medium;
@@ -89,7 +88,7 @@ body {
     text-align: left;
 }
 
-.button {
+.buttonOk {
     background-color: darkgrey;
     color: white;
     border-radius: 8px;
@@ -97,6 +96,16 @@ body {
     height: 30px;
     font-size: 0.8em;
 }
+
+.buttonSend {
+    background-color: darkgrey;
+    color: white;
+    border-radius: 8px;
+    width: 60px;
+    height: 30px;
+    font-size: 0.8em;
+}
+
 
 .sectionAddMessage {
     height: 10%;
@@ -116,6 +125,16 @@ body {
     padding: 1px;
     border-radius: 4px;
     border:3px solid lightgreen;
+}
+
+.inputNewMessage {
+    border:3px solid lightgreen;
+}
+
+.dialogBoxMessage {
+    border:2px solid lightgreen;
+    border-radius: 4px;
+    background: darkgrey center;
 }
 
 footer {
