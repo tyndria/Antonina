@@ -2,6 +2,7 @@
  * Created by Антонина on 01.03.16.
  */
 
+var messageList = [];
 
 function run() {
     var appContainer = document.getElementsByClassName('chatContainer')[0];
@@ -9,6 +10,7 @@ function run() {
     appContainer.addEventListener('click', delegateEvent);
     appContainer.addEventListener('click', delegateEvent);
 }
+
 
 var name = "Guest";
 
@@ -22,10 +24,35 @@ function delegateEvent(evtObj) {
 }
 
 function onOkButtonClick() {
-    var buf = document.getElementById('name');
-    if (!buf.value)
+    var previousName = name;
+    var nameItem = document.getElementById('name');
+    if (!nameItem.value)
         return;
-    name = buf.value;
+    name = nameItem.value;
+    nameItem.style.color = 'blue';
+    nameItem.style.fontStyle = 'italic';
+    var inputMessage = document.getElementById('message');
+    inputMessage.setAttribute('placeholder', name + ', enter you message');
+}
+
+function editName() {
+    var previousName = name;
+    var currentName = document.getElementById('name');
+    if (!currentName.value)
+        return;
+    name = currentName.value;
+    currentName.style.color = 'blue';
+    currentName.style.fontStyle = 'italic';
+    var inputMessage = document.getElementById('message');
+    inputMessage.setAttribute('placeholder', name + ', enter you message');
+    var table = document.getElementById('tableMessage').getElementsByTagName('tbody')[0];
+    var rowCount = table.rows.length;
+    for (var i = 0; i < rowCount; i ++) {
+        var row = table.rows[i];
+        if (row.cells[0].innerHTML === previousName) {
+            row.cells[0].innerHTML = name;
+        }
+    }
 }
 
 function onSendButtonClick() {
@@ -46,7 +73,7 @@ function findIndexMessage(id) {
     return null;
 }
 
-function setIcon(i, src) {
+function setDoneActionIcon(i, src) { //show that message is removed or edited
     var table = document.getElementById('tableMessage').getElementsByTagName('tbody')[0];
     var previousRow = table.rows[i];
     previousRow.cells[2].appendChild(createIcon(src));
@@ -57,7 +84,7 @@ function deleteMessage(id) {
     var table = document.getElementById('tableMessage').getElementsByTagName('tbody')[0];
     var i = findIndexMessage(id);
     if (i != null ) {
-        setIcon(i - 1, 'http://icons.iconarchive.com/icons/icons8/ios7/256/Messaging-Trash-icon.png');
+        setDoneActionIcon(i - 1, 'http://icons.iconarchive.com/icons/icons8/ios7/256/Messaging-Trash-icon.png');
         table.deleteRow(i);
     }
 }
@@ -74,33 +101,46 @@ function editMessage(id) {
         document.getElementById('ok').onclick = function () {
             var newMessage = document.getElementById('newText');
             table.rows[i].cells[0].innerHTML = newMessage.value;
-            setIcon(i - 1, "http://www.free-icons-download.net/images/edit-icon-61879.png");
+            setDoneActionIcon(i - 1, "http://www.free-icons-download.net/images/edit-icon-61879.png");
             dialog.close();
         }
     }
 }
 
-function createDialogBox() {
-    var dialog = document.createElement('dialog');
-    dialog.setAttribute('id', 'window');
-    dialog.classList.add('dialogBoxMessage');
+function createInputTextOfDialog() {
     var inputText = document.createElement('input');
     inputText.setAttribute('id', 'newText');
     inputText.setAttribute('type', 'text');
     inputText.classList.add('inputNewMessage');
     inputText.setAttribute('placeholder', 'Enter message');
-    dialog.appendChild(inputText);
+    return inputText;
+}
+
+function createButtonOkOfDialog(){
     var buttonOk = document.createElement('button');
     buttonOk.setAttribute('id', 'ok');
     buttonOk.setAttribute('type', 'button');
     buttonOk.classList.add('buttonOk');
     buttonOk.appendChild(document.createTextNode('Ok'));
-    dialog.appendChild(buttonOk);
+    return buttonOk;
+}
+
+function createButtonExitOfDialog() {
     var buttonExit = document.createElement('button');
     buttonExit.setAttribute('id', 'exit');
     buttonExit.classList.add('buttonOk');
     buttonExit.appendChild(document.createTextNode('Exit'));
-    dialog.appendChild(buttonExit);
+    return buttonExit;
+}
+
+var dialog;
+function createDialogBox() {
+    dialog = document.createElement('dialog');
+    dialog.setAttribute('id', 'window');
+    dialog.classList.add('dialogBoxMessage');
+    dialog.appendChild(createInputTextOfDialog());
+    dialog.appendChild(createButtonOkOfDialog());
+    dialog.appendChild(createButtonExitOfDialog());
     return dialog;
 }
 
@@ -138,8 +178,13 @@ function createCellText(value) {
     cellMessage.classList.add('outputMessage');
 }
 
-function createCellError() {
+function createCellError() { // no functional part just example
+    var table = document.getElementById('tableMessage').getElementsByTagName('tbody')[0];
     var cellError = secondRow.insertCell(1);
+    if (table.rows.length === 2) {
+        var iconError = createIcon('https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png', null, 0);
+        cellError.appendChild(iconError);
+    }
 }
 
 var firstRow;
@@ -158,8 +203,6 @@ function addMessage(value) {
     createCellTime();
     createCellText(value);
     createCellError();
-    var history = document.getElementById('sectionHistory');
-    history.scrollTop = history.scrollHeight;
 }
 
 function createIcon(src, functn, id) {
