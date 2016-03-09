@@ -2,11 +2,8 @@
  * Created by Антонина on 01.03.16.
  */
 
-var messageList = [];
-
 function run() {
     var appContainer = document.getElementsByClassName('chatContainer')[0];
-    appContainer.addEventListener('click', delegateEvent);
     appContainer.addEventListener('click', delegateEvent);
     appContainer.addEventListener('click', delegateEvent);
 }
