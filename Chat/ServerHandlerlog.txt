@@ -1,0 +1,1 @@
+[by.bsu.up.chat.server.ServerHandler] Received new message from user: hi

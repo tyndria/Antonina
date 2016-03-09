@@ -1,0 +1,1 @@
+[by.bsu.up.chat.client.Client] Message from server: hi
