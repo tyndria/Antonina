@@ -2,12 +2,76 @@
  * Created by Антонина on 01.03.16.
  */
 
+var messageTable = [];
+
+function uniqueId() {
+    var date = Date.now();
+    var random = Math.random() * Math.random();
+
+    return Math.floor(date * random);
+}
+
+function newMessage(name, text, time, deleted, edited) {
+    return {
+        name: '' + name,
+        text: '' + text,
+        timestamp: '' + time,
+        deleted: !!deleted,
+        edited: !!edited,
+        id: uniqueId()
+    };
+};
+
+
+
 function run() {
     var appContainer = document.getElementsByClassName('chatContainer')[0];
     appContainer.addEventListener('click', delegateEvent);
     appContainer.addEventListener('click', delegateEvent);
+
+    var allMessages = loadTasks();
+    render(allMessages);
 }
 
+function render(allMessages) {
+    for (var i = 0; i < allMessages.length; i ++) {
+        renderMessage(allMessages[i]);
+    }
+    renderLocalStorage(allMessages);
+}
+
+function renderMessage(message) {
+    var table = document.getElementById('tableMessage').getElementsByTagName('tbody')[0];
+    var element = elementFromTemplate();
+    renderMessageState(element, message);
+    table.insertRow(element);
+}
+
+function renderMessageState(element, message) {
+    var cellName = element.getElementsByClassName('outputName');
+    cellName.textContent = message.name;
+
+    var cellTime = element.getElementsByClassName('outputTime');
+    cellTime.textContent = message.timestamp;
+
+    var cellDoneActions = element.getElementsByClassName('outputDoneAction');
+    if (message.edited) {
+        cellDoneActions.appendChild(createIcon('http://www.free-icons-download.net/images/edit-icon-61879.png'));
+    }
+    if(message.deleted) {
+        cellDoneActions.appendChild(createIcon('http://icons.iconarchive.com/icons/icons8/ios7/256/Messaging-Trash-icon.png'));
+    }
+
+    element.setAttribute('data-message-id', message.id);
+
+    var cellTextMessage = element.getElementsByClassName('outputMessage');
+    cellTextMessage.textContent = message.text;
+}
+
+function elementFromTemplate() {
+    var template = document.getElementById("messageTemplate");
+    return template.firstElementChild.cloneNode(true);
+}
 
 var name = "Guest";
 
@@ -53,9 +117,11 @@ function editName() {
 }
 
 function onSendButtonClick() {
-    var message = document.getElementById('message');
-    addMessage(message.value);
-    message.value = '';
+    var textMessage = document.getElementById('message');
+    var message = newMessage(name, textMessage.value, getTime(), false, false);
+    messageTable.push(message);
+    render([message]);
+    saveTasks(messageTable);
 }
 
 function findIndexMessage(id) {
@@ -91,6 +157,7 @@ function editMessage(id) {
     var i = findIndexMessage(id);
     if (i != null) {
         var dialog = document.getElementById('window');
+
         dialog.show();
         document.getElementById('exit').onclick = function () {
             dialog.close();
@@ -169,6 +236,11 @@ function createCellTime() {
     cellTime.classList.add('outputTime');
 }
 
+function getTime() {
+    var d = new Date();
+    return d.toLocaleTimeString();
+}
+
 function createCellText(value) {
     var cellMessage = secondRow.insertCell(0);
     cellMessage.appendChild(document.createTextNode(value));
@@ -187,9 +259,12 @@ function createCellError() { // no functional part just example
 var firstRow;
 var secondRow;
 
-function addMessage(value) {
-    if (!value)
-        return;
+function renderMessage(message) {
+    messageTable.push(message);
+    createItem(message);
+}
+
+function createItem(message) {
     var table = document.getElementById('tableMessage').getElementsByTagName('tbody')[0];
     firstRow = table.insertRow(table.rows.length);
     secondRow = table.insertRow(table.rows.length);
@@ -212,3 +287,19 @@ function createIcon(src, functn, id) {
     return icon;
 }
 
+function saveTasks(messageToSave) {
+    if (typeof (Storage) == "undefined") {
+        alert("Storage is not accessible")
+        return;
+    }
+    localStorage.setItem("history", JSON.stringify(messageToSave));
+}
+
+function loadTasks() {
+    if (typeof (Storage) == "undefined") {
+        alert("Storage is not accessible")
+        return;
+    }
+    var items = localStorage.getItem("history");
+    return items && JSON.parse(items);
+}

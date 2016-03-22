@@ -9,7 +9,16 @@ body {
     margin: 0;
     padding: 0;
 }
+.listMessage {
+    list-style: none;
+    width: 90%;
 
+}
+
+li, ul {
+    padding: 2px;
+    margin: auto;
+}
 .header {
     background-color: lightgreen;
     color: white;
@@ -45,7 +54,7 @@ body {
 
 .sectionHistory {
     height: 60%;
-    width: 70%;
+    width: 80%;
     overflow-y: scroll;
     border:5px solid dimgrey;
     border-radius: 4px;
@@ -55,25 +64,21 @@ body {
 
 .outputName {
     color: white;
-    font-style: oblique;
+    font-style: normal;
     font-size: medium;
     text-align: left;
+    word-wrap: break-word;
 }
 
-.outputTime {
-    color: dodgerblue;
-    font-size: medium;
-    text-align: right;
-}
-
-.outputMessage {
-    width: 70%;
+.outputText {
     color: lightgreen;
     font-style: normal;
     font-size: medium;
     text-align: left;
     word-wrap: break-word;
 }
+
+
 
 .outputAction {
     text-align: left;

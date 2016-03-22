@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styleChat.css"/>
     <link rel="stylesheet" href="responsive.css"/>
-    <script src="js/scripts.js"></script>
+    <script src="js/scripts2.js"></script>
     <title>Alone programmers's chat</title>
 </head>
 <body onload="run();">
@@ -16,10 +16,9 @@
             <button id = "enterName" type = "button" class = "buttonOk">Ok</button>
         </div>
         <div class = "sectionHistory">
-            <table id="tableMessage" style="width: 100%; table-layout: auto">
-                <tbody>
-                </tbody>
-            </table>
+            <ul id="listMessage" class="listMessage" >
+
+            </ul>
         </div>
         <div class= "sectionAddMessage">
             <input id = "message" type = "text" class="inputMessage" placeholder="Enter you message">
@@ -29,6 +28,21 @@
             tyndria23@gmail.com</a></p>
         <p>Minsk 2016</p>
     </footer>
+        <div style="display:none" id="messageTemplate">
+                <li class="outputName" data-message-id = "identifier">
+                    <img src="http://findicons.com/files/icons/2443/bunch_of_cool_bluish_icons/256/edit.png" width="20" height="20" onclick="editMessage(this)">
+                    <img src="http://www.edge-online.org/wp-content/uploads/2014/11/garbage.png" width="20" height="20" onclick="deleteMessage(this)">
+                    <br/>
+                </li>
+        </div>
+        <div style="display:none" id="dialogBoxTemplate">
+            <dialog class="dialogBoxMessage" id="window">
+                <input class="inputNewMessage" id="newText" type="text" placeholder="Enter message">
+                <button class="buttonOk" id="ok" type="button">Ok</button>
+                <button class="buttonOk" id="exit">Exit</button>
+            </dialog>
+        </div>
+
     </main>
 </body>
 </html>
