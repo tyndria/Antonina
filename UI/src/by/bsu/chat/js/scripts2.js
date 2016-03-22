@@ -12,6 +12,19 @@ function run() {
     if (allMessages != null) {
         render(allMessages);
     }
+    setUserName();
+}
+
+function setUserName() {
+    name = localStorage.getItem('name');
+    if (name === 'null' || name == 'undefined')
+        name = "Guest";
+
+    var inputName = document.getElementById('name');
+    inputName.setAttribute('placeholder', name);
+
+    var inputMessage = document.getElementById('message');
+    inputMessage.setAttribute('placeholder', name + ', enter you message');
 }
 
 function delegateEvent(evtObj) {
@@ -123,6 +136,8 @@ function saveTasks(messageToSave) {
         return;
     }
     localStorage.setItem("history", JSON.stringify(messageToSave));
+    localStorage.removeItem('name');
+    localStorage.setItem('name', name)
 }
 
 function loadTasks() {
