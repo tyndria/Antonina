@@ -54,7 +54,7 @@ li, ul {
 
 .sectionHistory {
     height: 60%;
-    width: 80%;
+    width: 70%;
     overflow-y: scroll;
     border:5px solid dimgrey;
     border-radius: 4px;
@@ -68,29 +68,6 @@ li, ul {
     font-size: medium;
     text-align: left;
     word-wrap: break-word;
-}
-
-.outputText {
-    color: lightgreen;
-    font-style: normal;
-    font-size: medium;
-    text-align: left;
-    word-wrap: break-word;
-}
-
-
-
-.outputAction {
-    text-align: left;
-}
-
-.outputDoneAction {
-    text-align: right;
-}
-
-.outputError {
-    width: 20%;
-    text-align: left;
 }
 
 .buttonOk {

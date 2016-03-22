@@ -1,4 +1,4 @@
-/**
+/**Adding, deleting, editing
  * Created by Антонина on 15.03.16.
  */
 var messageTable = [];
@@ -56,7 +56,7 @@ function uniqueId() {
     return Math.floor(date * random);
 }
 
-function newMessage(name, text, time, deleted, edited, wasEdited) {
+function newMessage(name, text, time, deleted, edited, wasEdited, error) {
     return {
         name: '' + name,
         text: '' + text,
@@ -64,7 +64,8 @@ function newMessage(name, text, time, deleted, edited, wasEdited) {
         deleted: !!deleted,
         edited: !!edited,
         wasEdited: !!wasEdited,
-        id: uniqueId()
+        id: uniqueId(),
+        error: !!error
     };
 }
 
@@ -91,18 +92,30 @@ function renderMessage(message) {
     list.appendChild(element);
 }
 
+function caseError(element, message) {
+    element.firstChild.textContent = "[" + message.timestamp + "]" + " " + message.name + " ";
+    element.lastChild.textContent = "";
+    element.appendChild(createIcon('https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png'));
+}
+
+function caseDeletedMessage(element, message) {
+    if (message.edited) {
+        element.removeChild(element.lastChild);
+    }
+    element.firstChild.textContent = "[" + message.timestamp + "]" + " " + message.name + " ";
+    element.lastChild.textContent = "";
+    element.appendChild(createIcon('http://icons.iconarchive.com/icons/icons8/ios7/256/Messaging-Trash-icon.png'));
+}
+
 function renderMessageState(element, message) {
     element.setAttribute('data-message-id', message.id);
 
+    if (message.error) {
+        caseError(element, message);
+        return;
+    }
     if (message.deleted) {
-
-        if (message.edited) {
-            element.removeChild(element.lastChild);
-        }
-
-        element.firstChild.textContent = "[" + message.timestamp + "]" + " " + message.name + " ";
-        element.lastChild.textContent = "";
-        element.appendChild(createIcon('http://icons.iconarchive.com/icons/icons8/ios7/256/Messaging-Trash-icon.png'));
+        caseDeletedMessage(element, message);
     }
     else {
         element.firstChild.textContent = "[" + message.timestamp + "]"+ " " + message.name + " ";
@@ -115,11 +128,13 @@ function renderMessageState(element, message) {
     }
 }
 
-
-
 function onSendButtonClick() {
     var textMessage = document.getElementById('message');
-    var message = newMessage(name, textMessage.value, getTime(), false, false, false);
+    var message;
+    if (messageTable.length == 0)
+        message = newMessage(name, textMessage.value, getTime(), false, false, false, true);
+    else
+        message = newMessage(name, textMessage.value, getTime(), false, false, false, false);
     messageTable.push(message);
     renderMessage(message);
     saveTasks(messageTable);
@@ -132,7 +147,7 @@ function getTime() {
 
 function saveTasks(messageToSave) {
     if (typeof (Storage) == "undefined") {
-        alert("Storage is not accessible")
+        alert("Storage is not accessible");
         return;
     }
     localStorage.setItem("history", JSON.stringify(messageToSave));
@@ -177,15 +192,19 @@ function createIcon(src) {
 
 function editMessage(element) {
     var currentElement = element.parentNode;
+
     var index = indexByElement(currentElement, messageTable);
     var message = messageTable[index];
+
     if (!message.deleted) {
         var dialog = elementFromTemplate('dialogBoxTemplate');
         currentElement.appendChild(dialog);
         dialog.show();
+
         document.getElementById('exit').onclick = function () {
             dialog.close();
         };
+
         document.getElementById('ok').onclick = function () {
             var newMessage = document.getElementById('newText');
             message.text = newMessage.value;
@@ -206,15 +225,28 @@ function editName() {
     if (!currentName.value)
         return;
     name = currentName.value;
+
     currentName.style.color = 'blue';
     currentName.style.fontStyle = 'italic';
     var inputMessage = document.getElementById('message');
     inputMessage.setAttribute('placeholder', name + ', enter you message');
-    for (var i = 0; i < messageTable.length; i ++) {
+
+    editNameMessageTable(previousName, currentName);
+
+    editNameElementList(previousName, currentName);
+
+    saveTasks(messageTable);
+}
+
+function editNameMessageTable(previousName, currentName) {
+    for (var i = 0; i < messageTable.length; i++) {
         if (messageTable[i].name == previousName) {
             messageTable[i].name = currentName.value;
         }
     }
+}
+
+function editNameElementList(previousName, currentName) {
     var list = document.getElementById('listMessage');
     var children = list.children;
     for (var i = 0; i < children.length; i++) {
@@ -227,5 +259,4 @@ function editName() {
             children[i].firstChild.textContent = namePlusTimestamp;
         }
     }
-    saveTasks(messageTable);
 }
