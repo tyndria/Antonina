@@ -1,0 +1,16 @@
+GET http://192.168.100.5:999/chat?token=TN27EN HTTP/1.1
+Host: 192.168.100.5:999
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Upgrade-Insecure-Requests: 1
+User-Agent: Composer
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: ru,en-US;q=0.8,en;q=0.6,be;q=0.4
+
+
+HTTP/1.1 200 OK
+Date: Tue, 29 Mar 2016 11:36:50 GMT
+Access-control-allow-origin: *
+Content-Length: 52
+
+{"messages":["it would be great!"],"token":"TN19EN"}

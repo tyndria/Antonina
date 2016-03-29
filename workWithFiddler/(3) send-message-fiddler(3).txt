@@ -1,0 +1,16 @@
+POST http://192.168.100.5:999/chat HTTP/1.1
+Host: 192.168.100.5:999
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Upgrade-Insecure-Requests: 1
+User-Agent: Composer
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: ru,en-US;q=0.8,en;q=0.6,be;q=0.4
+Content-Length: 35
+
+{"message": "Message from server!"}
+HTTP/1.1 200 OK
+Date: Tue, 29 Mar 2016 11:38:54 GMT
+Access-control-allow-origin: *
+Content-Length: 0
+
