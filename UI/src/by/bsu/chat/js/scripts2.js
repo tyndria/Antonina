@@ -7,7 +7,6 @@ var name = "Guest";
 function run() {
     var appContainer = document.getElementsByClassName('chatContainer')[0];
     appContainer.addEventListener('click', delegateEvent);
-    appContainer.addEventListener('click', delegateEvent);
     var allMessages = loadTasks();
     if (allMessages != null) {
         render(allMessages);
@@ -131,11 +130,16 @@ function renderMessageState(element, message) {
 function onSendButtonClick() {
     var textMessage = document.getElementById('message');
     var message;
+
     if (messageTable.length == 0)
         message = newMessage(name, textMessage.value, getTime(), false, false, false, true);
     else
         message = newMessage(name, textMessage.value, getTime(), false, false, false, false);
+
+    textMessage.value = "";
+
     messageTable.push(message);
+
     renderMessage(message);
     saveTasks(messageTable);
 }
@@ -197,22 +201,27 @@ function editMessage(element) {
     var message = messageTable[index];
 
     if (!message.deleted) {
-        var dialog = elementFromTemplate('dialogBoxTemplate');
-        currentElement.appendChild(dialog);
-        dialog.show();
+        var dialog = document.getElementById("overlay");
+        dialog.style.visibility = (dialog.style.visibility == "visible") ? "hidden" : "visible";
+
+        var inputNewMessage = document.getElementById('newText');
+        inputNewMessage.focus();
 
         document.getElementById('exit').onclick = function () {
-            dialog.close();
+            inputNewMessage.value = "";
+            dialog.style.visibility = (dialog.style.visibility == "visible") ? "hidden" : "visible";
         };
 
         document.getElementById('ok').onclick = function () {
-            var newMessage = document.getElementById('newText');
-            message.text = newMessage.value;
+            message.text = inputNewMessage.value;
             message.edited = true;
-            dialog.close();
-            currentElement.removeChild(dialog);
+
+            inputNewMessage.value = "";
+            dialog.style.visibility = (dialog.style.visibility == "visible") ? "hidden" : "visible";
+
             if (message.wasEdited)
-                currentElement.removeChild(currentElement.lastElementChild);
+                currentElement.removeChild(currentElement.lastChild);
+
             saveTasks(messageTable);
             renderMessageState(currentElement, message);
         }
