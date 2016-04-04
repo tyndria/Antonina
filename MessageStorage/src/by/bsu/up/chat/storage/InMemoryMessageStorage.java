@@ -1,6 +1,5 @@
 package by.bsu.up.chat.storage;
 
-import by.bsu.up.chat.Constants;
 import by.bsu.up.chat.common.models.Message;
 import by.bsu.up.chat.logging.Logger;
 import by.bsu.up.chat.logging.impl.Log;
@@ -89,22 +88,27 @@ public class InMemoryMessageStorage implements MessageStorage {
     }
 
     private void loadHistory() {
-        try(BufferedReader reader = new BufferedReader(new StringReader(DEFAULT_PERSISTENCE_FILE))) {
-            String jsonArrayString = reader.readLine();
-            JSONArray jsonArray = (JSONArray) MessageHelper.getJsonParser().parse(jsonArrayString);
-            for (int i = 0; i < jsonArray.size(); i ++) {
-                Message message = new Message();
-                JSONObject jsonObject = (JSONObject)jsonArray.get(i);
-                message.setText((String)jsonObject.get(Constants.Message.FIELD_TEXT));
-                message.setAuthor((String)jsonObject.get(Constants.Message.FIELD_AUTHOR));
-                message.setId((String)jsonObject.get(Constants.Message.FIELD_ID));
-                message.setTimestamp((Long)jsonObject.get(Constants.Message.FIELD_TIMESTAMP));
-                messages.add(message);
+        StringBuilder jsonArrayString = new StringBuilder();
+        try(BufferedReader reader = new BufferedReader(new FileReader(DEFAULT_PERSISTENCE_FILE))) {
+            while (reader.ready()) {
+                jsonArrayString.append(reader.readLine());
             }
         } catch (IOException e) {
+            logger.error("Could not parse message.", e);
+        }
 
+        JSONArray jsonArray = new JSONArray();
+
+        try {
+            jsonArray = (JSONArray) MessageHelper.getJsonParser().parse(jsonArrayString.toString());
         } catch (ParseException e) {
+            logger.error("Could not parse message.", e);
+        }
 
+        for (int i = 0; i < jsonArray.size(); i ++) {
+            JSONObject jsonObject = (JSONObject)jsonArray.get(i);
+            Message message = MessageHelper.jsonObjectToMessage(jsonObject);
+            messages.add(message);
         }
     }
 }

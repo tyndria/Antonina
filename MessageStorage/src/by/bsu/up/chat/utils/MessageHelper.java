@@ -167,4 +167,13 @@ public class MessageHelper {
         jsonObject.put(Constants.Message.FIELD_TEXT, message.getText());
         return jsonObject;
     }
+
+    public static Message jsonObjectToMessage(JSONObject jsonObject) {
+        Message message = new Message();
+        message.setText((String)jsonObject.get(Constants.Message.FIELD_TEXT));
+        message.setAuthor((String)jsonObject.get(Constants.Message.FIELD_AUTHOR));
+        message.setId((String)jsonObject.get(Constants.Message.FIELD_ID));
+        message.setTimestamp((long)jsonObject.get(Constants.Message.FIELD_TIMESTAMP));
+        return message;
+    }
 }
