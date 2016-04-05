@@ -124,9 +124,7 @@ public class ServerHandler implements HttpHandler {
         }
         try {
             messageStorage.removeMessage(id);
-            List<Message> messages = messageStorage.getPortion(new Portion(0, messageStorage.size() - 1));
-            String responseBody = MessageHelper.buildServerResponseBody(messages, messageStorage.size());
-            return Response.ok(responseBody);
+            return Response.ok();
         } catch (InvalidTokenException e) {
             return Response.badRequest(e.getMessage());
         }
