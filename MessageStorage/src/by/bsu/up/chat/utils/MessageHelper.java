@@ -5,7 +5,6 @@ import by.bsu.up.chat.InvalidTokenException;
 import by.bsu.up.chat.common.models.Message;
 import by.bsu.up.chat.logging.Logger;
 import by.bsu.up.chat.logging.impl.Log;
-import jdk.nashorn.internal.ir.debug.JSONWriter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,7 +13,6 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MessageHelper {
 
@@ -118,21 +116,27 @@ public class MessageHelper {
 
     public static Message getClientMessage(InputStream inputStream) throws ParseException {
         JSONObject jsonObject = stringToJsonObject(inputStreamToString(inputStream));
-        String id = ((String) jsonObject.get(Constants.Message.FIELD_ID));
-        String author = ((String) jsonObject.get(Constants.Message.FIELD_AUTHOR));
-        long timestamp = ((long) jsonObject.get(Constants.Message.FIELD_TIMESTAMP));
+        Long id = (long)jsonObject.get(Constants.Message.FIELD_ID);
+        String author = ((String) jsonObject.get(Constants.Message.FIELD_NAME));
+        String timestamp = ((String)jsonObject.get(Constants.Message.FIELD_TIMESTAMP));
         String text = ((String) jsonObject.get(Constants.Message.FIELD_TEXT));
+        Boolean deleted = (boolean)jsonObject.get(Constants.Message.FIELD_DELETED);
+        Boolean edited = (boolean)jsonObject.get(Constants.Message.FIELD_EDITED);
+        Boolean wasEdited = (boolean)jsonObject.get(Constants.Message.FIELD_WASEDITED);
         Message message = new Message();
         message.setId(id);
-        message.setAuthor(author);
+        message.setName(author);
         message.setTimestamp(timestamp);
         message.setText(text);
+        message.setDeleted(deleted);
+        message.setEdited(edited);
+        message.setWasEdited(wasEdited);
         return message;
     }
 
     public static Message getClientMessageToReplace(InputStream inputStream) throws ParseException {
         JSONObject jsonObject = stringToJsonObject(inputStreamToString(inputStream));
-        String id = ((String) jsonObject.get(Constants.Message.FIELD_ID));
+        Long id = (long)jsonObject.get(Constants.Message.FIELD_ID);
         String text = ((String) jsonObject.get(Constants.Message.FIELD_TEXT));
         Message message = new Message();
         message.setId(id);
@@ -162,18 +166,24 @@ public class MessageHelper {
     public static JSONObject messageToJSONObject(Message message) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(Constants.Message.FIELD_ID, message.getId());
-        jsonObject.put(Constants.Message.FIELD_AUTHOR, message.getAuthor());
+        jsonObject.put(Constants.Message.FIELD_NAME, message.getName());
         jsonObject.put(Constants.Message.FIELD_TIMESTAMP, message.getTimestamp());
         jsonObject.put(Constants.Message.FIELD_TEXT, message.getText());
+        jsonObject.put(Constants.Message.FIELD_EDITED, message.isEdited().toString());
+        jsonObject.put(Constants.Message.FIELD_WASEDITED, message.isWasEdited().toString());
+        jsonObject.put(Constants.Message.FIELD_DELETED, message.isDeleted().toString());
         return jsonObject;
     }
 
     public static Message jsonObjectToMessage(JSONObject jsonObject) {
         Message message = new Message();
         message.setText((String)jsonObject.get(Constants.Message.FIELD_TEXT));
-        message.setAuthor((String)jsonObject.get(Constants.Message.FIELD_AUTHOR));
-        message.setId((String)jsonObject.get(Constants.Message.FIELD_ID));
-        message.setTimestamp((long)jsonObject.get(Constants.Message.FIELD_TIMESTAMP));
+        message.setName((String)jsonObject.get(Constants.Message.FIELD_NAME));
+        message.setId((long)jsonObject.get(Constants.Message.FIELD_ID));
+        message.setTimestamp((String)jsonObject.get(Constants.Message.FIELD_TIMESTAMP));
+        message.setEdited(Boolean.parseBoolean((String)jsonObject.get(Constants.Message.FIELD_EDITED)));
+        message.setWasEdited(Boolean.parseBoolean((String)jsonObject.get(Constants.Message.FIELD_WASEDITED)));
+        message.setDeleted(Boolean.parseBoolean((String)jsonObject.get(Constants.Message.FIELD_DELETED)));
         return message;
     }
 }

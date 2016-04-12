@@ -23,6 +23,7 @@ public class InMemoryMessageStorage implements MessageStorage {
     public InMemoryMessageStorage() {
         messages = new ArrayList<>();
         loadHistory();
+
     }
 
     @Override
@@ -48,9 +49,15 @@ public class InMemoryMessageStorage implements MessageStorage {
     @Override
     public boolean updateMessage(Message message) {
         for (int i = 0; i < messages.size(); i++) {
-            if (messages.get(i).getId().equals(message.getId())) {
+            if (messages.get(i).getId().compareTo(message.getId()) == 0) {
                 Message newMessage = messages.get(i);
+                if (newMessage.isDeleted())
+                    return false;
+                if (newMessage.isEdited()) {
+                    newMessage.setWasEdited(true);
+                }
                 newMessage.setText(message.getText());
+                newMessage.setEdited(true);
                 messages.set(i, newMessage);
                 rewriteHistory();
                 return true;
@@ -62,8 +69,13 @@ public class InMemoryMessageStorage implements MessageStorage {
     @Override
     public synchronized boolean removeMessage(String messageId) {
         for (int i = 0; i < messages.size(); i++) {
-            if (messages.get(i).getId().equals(messageId)) {
-                messages.remove(i);
+            if (messages.get(i).getId().compareTo(Long.parseLong(messageId)) == 0) {
+                Message newMessage = messages.get(i);
+                newMessage.setText("");
+                newMessage.setDeleted(true);
+                newMessage.setEdited(false);
+                newMessage.setWasEdited(false);
+                messages.set(i, newMessage);
                 rewriteHistory();
                 return true;
             }
@@ -98,6 +110,10 @@ public class InMemoryMessageStorage implements MessageStorage {
         }
 
         JSONArray jsonArray = new JSONArray();
+
+        if (jsonArrayString.length() == 0) {
+            return;
+        }
 
         try {
             jsonArray = (JSONArray) MessageHelper.getJsonParser().parse(jsonArrayString.toString());
