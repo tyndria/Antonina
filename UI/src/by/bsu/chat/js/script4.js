@@ -197,6 +197,8 @@ function ajax(method, url, data, continueWith) {
             return;
         }
         if (isError(xhr.responseText)) {
+            isConnected = void 0;
+            connect();
             return;
         }
         continueWith(xhr.responseText);
@@ -207,9 +209,8 @@ function ajax(method, url, data, continueWith) {
     xhr.onerror = function (e) {
         errorIcon.style.visibility = (errorIcon.style.visibility == "visible") ? "hidden" : "visible";
         isConnected = void 0;
+        connect();
     };
-
-    connect();
     errorIcon.style.visibility = "hidden";
 
 
