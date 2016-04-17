@@ -14,7 +14,7 @@
             <img src="http://findicons.com/files/icons/2443/bunch_of_cool_bluish_icons/256/edit.png" width="20" height="20">
             <input id = "name" type = "text" class = "inputName">
             <button id = "enterName" type = "button" class = "buttonOk">Ok</button>
-            <img id="errorIcon"class="errorIcon" src="https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png" width="25" height="25" align="right" style="padding: 5px">
+            <img id="errorIcon"class="icon" src="https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png" width="25" height="25" align="right" style="padding: 5px">
         </div>
         <div class = "sectionHistory">
             <ul id="listMessage" class="listMessage" >
@@ -31,11 +31,11 @@
     </footer>
         <div style="display:none" id="messageTemplate">
                 <li class="outputName" data-message-id = "identifier">
-                    <img src="http://findicons.com/files/icons/2443/bunch_of_cool_bluish_icons/256/edit.png" width="20" height="20" onclick="onItemClickToEdit(this)">
-                    <img src="http://www.edge-online.org/wp-content/uploads/2014/11/garbage.png" width="20" height="20" onclick="onItemClickToDelete(this)">
+                    <img class="editIcon" src="http://findicons.com/files/icons/2443/bunch_of_cool_bluish_icons/256/edit.png" width="20" height="20" onclick="onItemClickToEdit(this)">
+                    <img class="deleteIcon" src="http://www.edge-online.org/wp-content/uploads/2014/11/garbage.png" width="20" height="20" onclick="onItemClickToDelete(this)">
                     <br/>
-                    <img class="editIcon" src="http://www.free-icons-download.net/images/edit-icon-61879.png" width="20" height="20">
-                    <img class="deleteIcon" src="http://icons.iconarchive.com/icons/icons8/ios7/256/Messaging-Trash-icon.png" width="20" height="20">
+                    <img class="editedIcon" src="http://www.free-icons-download.net/images/edit-icon-61879.png" width="20" height="20">
+                    <img class="deletedIcon" src="http://icons.iconarchive.com/icons/icons8/ios7/256/Messaging-Trash-icon.png" width="20" height="20">
                 </li>
         </div>
         <div id="overlay" class="overlay">

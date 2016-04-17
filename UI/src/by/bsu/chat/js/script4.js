@@ -213,7 +213,6 @@ function ajax(method, url, data, continueWith) {
     };
     errorIcon.style.visibility = "hidden";
 
-
     xhr.send(data);
 }
 
@@ -317,12 +316,20 @@ function render(root) {
 function caseDeletedMessage(element, message) {
     element.firstChild.textContent = "[" + message.timestamp + "]" + " " + message.name + " ";
     element.lastChild.textContent = "";
-    var deleteIcon = element.getElementsByClassName('deleteIcon')[0];
-    deleteIcon.style.visibility = "visible";
+    var deletedIcon = element.getElementsByClassName('deletedIcon')[0];
+    deletedIcon.style.visibility = "visible";
 }
 
 function renderMessageState(element, message) {
     element.setAttribute('data-message-id', message.id);
+
+    if(message.name == name) {
+        var editIcon = element.getElementsByClassName('editIcon')[0];
+        editIcon.style.visibility = "visible";
+
+        var deleteIcon = element.getElementsByClassName('deleteIcon')[0];
+        deleteIcon.style.visibility = "visible";
+    }
 
     if (message.deleted == 'true') {
         caseDeletedMessage(element, message);
@@ -332,8 +339,8 @@ function renderMessageState(element, message) {
         element.lastChild.textContent = message.text + " ";
 
         if (message.edited == 'true') {
-            var editIcon = element.getElementsByClassName('editIcon')[0];
-            editIcon.style.visibility = "visible";
+            var editedIcon = element.getElementsByClassName('editedIcon')[0];
+            editedIcon.style.visibility = "visible";
             message.wasEdited = 'true';
         }
     }

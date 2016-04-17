@@ -142,7 +142,7 @@ footer {
     color: white;
 }
 
-.errorIcon {
+.icon {
     visibility: hidden;
 }
 
@@ -151,5 +151,13 @@ footer {
 }
 
 .deleteIcon {
+    visibility: hidden;
+}
+
+.deletedIcon {
+    visibility: hidden;
+}
+
+.editedIcon {
     visibility: hidden;
 }
