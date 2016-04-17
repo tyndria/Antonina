@@ -145,3 +145,11 @@ footer {
 .errorIcon {
     visibility: hidden;
 }
+
+.editIcon {
+    visibility: hidden;
+}
+
+.deleteIcon {
+    visibility: hidden;
+}

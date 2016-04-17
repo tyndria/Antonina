@@ -1,12 +1,28 @@
-/**Use ajax
- * Created by Антонина on 10.04.16.
+/**use ajax, asyn cycle
+ * Created by Антонина on 15.04.16.
  */
+
+
+var isConnected = void 0;
 
 var Application = {
     mainUrl: 'http://localhost:8080/chat',
     messageList: [],
     token: 'TN11EN'
 };
+
+function seconds(value) {
+    return Math.round(value * 1000);
+}
+
+function whileConnected() {
+    isConnected = setTimeout(function () {
+        loadMessages(function () {
+            render(Application);
+            whileConnected()
+        });
+    }, seconds(1));
+}
 
 function uniqueId() {
     var date = Date.now();
@@ -39,11 +55,16 @@ function run() {
 
     appContainer.addEventListener('click', delegateEvent);
 
-    loadMessages(function () {
-        render(Application);
-    });
-
     setUserName();
+
+    connect();
+}
+
+function connect() {
+    if (isConnected)
+        return;
+
+    whileConnected();
 }
 
 function setUserName() {
@@ -80,7 +101,7 @@ function onOkButtonClick() {
     inputMessage.setAttribute('placeholder', name + ', enter you message');
 }
 
-function editMessage(element, done) {
+function editMessage(element) {
     var id = idFromElement(element);
 
     var index = indexById(Application.messageList, id);
@@ -104,21 +125,14 @@ function editMessage(element, done) {
         inputNewMessage.value = "";
         dialog.style.visibility = (dialog.style.visibility == "visible") ? "hidden" : "visible";
 
-        if (message.wasEdited == 'true') {
-            element.removeChild(element.lastChild);
-        }
-        ajax('PUT', Application.mainUrl, JSON.stringify(message), function () {
-            done(element, message);
-        });
+        ajax('PUT', Application.mainUrl, JSON.stringify(message));
     }
 }
 
-function deleteMessage(id, done) {
+function deleteMessage(id) {
     var url = Application.mainUrl + '?msgId=' + id;
 
-    ajax('DELETE', url, null, function () {
-        done();
-    });
+    ajax('DELETE', url, null);
 }
 
 function indexById(list, id) {
@@ -136,9 +150,7 @@ function onItemClickToDelete(element) {
     var message = Application.messageList[index];
 
     message.deleted = 'true';
-    deleteMessage(id, function () {
-        renderMessageState(currentElement, message);
-    });
+    deleteMessage(id);
 }
 
 function idFromElement(element) {
@@ -151,6 +163,7 @@ function onItemClickToEdit(element) {
     var id = idFromElement(currentElement);
 
     var index = indexById(Application.messageList, id);
+
     var message = Application.messageList[index];
 
     message.edited = 'true';
@@ -158,18 +171,14 @@ function onItemClickToEdit(element) {
         return;
     }
 
-    editMessage(currentElement, function () {
-        renderMessageState(currentElement, message);
-    });
+    editMessage(currentElement);
 }
 
 function loadMessages(done) {
     var url = Application.mainUrl + '?token=' + Application.token;
     ajax('GET', url, null, function (responseText) {
         var response = JSON.parse(responseText);
-
         Application.messageList = response.messages;
-        Application.token = response.token;
         done();
     });
 }
@@ -197,9 +206,12 @@ function ajax(method, url, data, continueWith) {
 
     xhr.onerror = function (e) {
         errorIcon.style.visibility = (errorIcon.style.visibility == "visible") ? "hidden" : "visible";
+        isConnected = void 0;
     };
 
+    connect();
     errorIcon.style.visibility = "hidden";
+
 
     xhr.send(data);
 }
@@ -231,15 +243,12 @@ function onSendButtonClick() {
         message = newMessage(name, textMessage, getTime(), false, false, false);
     }
 
-    addMessage(message, function () {
-        renderMessage(message);
-    });
+    addMessage(message);
 }
 
-function addMessage(message, done) {
+function addMessage(message) {
     ajax('POST', Application.mainUrl, JSON.stringify(message), function () {
         Application.messageList.push(message);
-        done();
     });
 }
 
@@ -252,27 +261,63 @@ function textValue() {
     return messageTextValue;
 }
 
-function renderMessage(message) {
-    var list = document.getElementsByClassName('listMessage')[0];
+function updateList(list, messageMap) {
+    var children = list.children;
+    var notFound = [];
 
-    var child = elementFromTemplate('messageTemplate');
-    renderMessageState(child, message);
-    list.appendChild(child);
+    for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        var id = child.attributes['data-message-id'].value;
+        var item = messageMap[id];
+
+        if (item == null) {
+            notFound.push(child);
+            continue;
+        }
+
+        renderMessageState(child, item);
+
+        messageMap[id] = null;
+    }
+
+    return notFound;
+}
+
+function appendToList(list, messageList, messageMap) {
+    for (var i = 0; i < messageList.length; i++) {
+        var message = messageList[i];
+
+        if (messageMap[message.id] == null) {
+            continue;
+        }
+        messageMap[message.id] = null;
+
+        var child = elementFromTemplate('messageTemplate');
+
+        renderMessageState(child, message);
+        list.appendChild(child);
+    }
 }
 
 function render(root) {
-    for (var i = 0; i < root.messageList.length; i++) {
-        renderMessage(root.messageList[i]);
-    }
+    var list = document.getElementsByClassName('listMessage')[0];
+
+    var messagesMap = root.messageList.reduce(function (accumulator, message) {
+        accumulator[message.id] = message;
+
+        return accumulator;
+    }, {});
+
+    updateList(list, messagesMap);
+
+    appendToList(list, root.messageList, messagesMap);
 }
 
 function caseDeletedMessage(element, message) {
-    if (message.edited == 'true') {
-        element.removeChild(element.lastChild);
-    }
     element.firstChild.textContent = "[" + message.timestamp + "]" + " " + message.name + " ";
     element.lastChild.textContent = "";
-    element.appendChild(createIcon('http://icons.iconarchive.com/icons/icons8/ios7/256/Messaging-Trash-icon.png'));
+    var deleteIcon = element.getElementsByClassName('deleteIcon')[0];
+    deleteIcon.style.visibility = "visible";
 }
 
 function renderMessageState(element, message) {
@@ -286,22 +331,13 @@ function renderMessageState(element, message) {
         element.lastChild.textContent = message.text + " ";
 
         if (message.edited == 'true') {
-            element.appendChild(createIcon('http://www.free-icons-download.net/images/edit-icon-61879.png'));
+            var editIcon = element.getElementsByClassName('editIcon')[0];
+            editIcon.style.visibility = "visible";
             message.wasEdited = 'true';
         }
     }
 }
 
-
-function createIcon(src) {
-    var icon = document.createElement('img');
-
-    icon.setAttribute('src', src);
-    icon.setAttribute('width', '20');
-    icon.setAttribute('height', '20');
-
-    return icon;
-}
 
 function elementFromTemplate(str) {
     var template = document.getElementById(str);
