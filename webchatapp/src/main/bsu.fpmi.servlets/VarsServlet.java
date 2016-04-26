@@ -21,9 +21,8 @@ public class VarsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final String[] vars = {"JAVA_HOME", "M2_HOME", "CATALINA_HOME","USERNAME", "PATH"};
         for (String var : vars) {
-            resp.setContentType("text/html;charset=Windows-1251");
+            resp.setCharacterEncoding("Windows-1251");
             resp.getWriter().println(String.format("%s=%s", var, System.getenv(var)));
-            //resp.getOutputStream().println(String.format("%s=%s", var, System.getenv(var)));
         }
     }
 }
