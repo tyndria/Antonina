@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/styleChat.css"/>
+    <link rel="stylesheet" href="../css/responsive.css"/>
+    <script src="../js/script4.js"></script>
+    <title>Alone programmers's chat</title>
+</head>
+<body onload="run();">
+    <main class = "chatContainer">
+        <header class = "header">Alone programmers's chat</header>
+        <div class ="sectionActions">
+            <img src="http://findicons.com/files/icons/2443/bunch_of_cool_bluish_icons/256/edit.png" width="20" height="20">
+            <input id = "name" type = "text" class = "inputName">
+            <button id = "enterName" type = "button" class = "buttonOk">Ok</button>
+            <img id="errorIcon"class="icon" src="https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png" width="25" height="25" align="right" style="padding: 5px">
+        </div>
+        <div class = "sectionHistory">
+            <ul id="listMessage" class="listMessage" >
+
+            </ul>
+        </div>
+        <div class= "sectionAddMessage">
+            <input id = "message" type = "text" class="inputMessage" placeholder="Enter you message">
+            <button id="addButton" type="button" class="buttonSend">Send</button>
+        </div>
+    <footer><p>Contact information: <a href="mailto:tyndria23@gmail.com">
+            tyndria23@gmail.com</a></p>
+        <p>Minsk 2016</p>
+    </footer>
+        <div style="display:none" id="messageTemplate">
+                <li class="outputName" data-message-id = "identifier">
+                    <img class="editIcon" src="http://findicons.com/files/icons/2443/bunch_of_cool_bluish_icons/256/edit.png" width="20" height="20" onclick="onItemClickToEdit(this)">
+                    <img class="deleteIcon" src="http://www.edge-online.org/wp-content/uploads/2014/11/garbage.png" width="20" height="20" onclick="onItemClickToDelete(this)">
+                    <br/>
+                    <img class="editedIcon" src="http://www.free-icons-download.net/images/edit-icon-61879.png" width="20" height="20">
+                    <img class="deletedIcon" src="http://icons.iconarchive.com/icons/icons8/ios7/256/Messaging-Trash-icon.png" width="20" height="20">
+                </li>
+        </div>
+        <div id="overlay" class="overlay">
+            <div>
+                <input class="inputNewMessage" id="newText" type="text" placeholder="Enter message">
+                <button class="buttonOk" id="ok" type="button">Ok</button>
+                <button class="buttonOk" id="exit">Exit</button>
+            </div>
+        </div>
+
+    </main>
+</body>
+</html>
