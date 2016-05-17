@@ -3,12 +3,12 @@
 
 <html>
 <head>
-    <link rel="stylesheet" href="css/styleLogin.css"/>
+    <link rel="stylesheet" href="../css/styleLogin.css"/>
     <title>Are you a lonely programmer?</title>
 </head>
 <body>
 <div class="welcomePageBody">
-    <form class="userForm" action="/login" method="post">
+    <form class="userForm" action="/chat" method="post">
         <div>
             <label style="color: white">Username</label>
             <input class="inputLoginPassword" type="text" name="username">

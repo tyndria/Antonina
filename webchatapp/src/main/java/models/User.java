@@ -1,4 +1,4 @@
-package main.bsu.fpmi.helper;
+package main.java.models;
 
 /**
  * Created by Антонина on 29.04.16.

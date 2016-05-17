@@ -8,6 +8,7 @@ var isConnected = void 0;
 var Application = {
     mainUrl: 'http://localhost:8080/chat',
     messageList: [],
+    messageListForResponse: [],
     token: 'TN11EN'
 };
 
@@ -111,6 +112,7 @@ function editMessage(element) {
     dialog.style.visibility = (dialog.style.visibility == "visible") ? "hidden" : "visible";
 
     var inputNewMessage = document.getElementById('newText');
+
     inputNewMessage.focus();
 
     document.getElementById('exit').onclick = function () {
@@ -120,7 +122,7 @@ function editMessage(element) {
 
     document.getElementById('ok').onclick = function () {
         message.text = inputNewMessage.value;
-        message.edited = 'true';
+        message.edited = true;
 
         inputNewMessage.value = "";
         dialog.style.visibility = (dialog.style.visibility == "visible") ? "hidden" : "visible";
@@ -129,10 +131,17 @@ function editMessage(element) {
     }
 }
 
-function deleteMessage(id) {
+function deleteMessage(currentElement) {
+    var id = idFromElement(currentElement);
+
+    var index = indexById(Application.messageList, id);
+
+    var message = Application.messageList[index];
+    message.deleted = true;
+
     var url = Application.mainUrl + '?msgId=' + id;
 
-    ajax('DELETE', url, null);
+    ajax('DELETE', url, JSON.stringify(message));
 }
 
 function indexById(list, id) {
@@ -143,14 +152,8 @@ function indexById(list, id) {
 
 function onItemClickToDelete(element) {
     var currentElement = element.parentNode;
-    var id = idFromElement(currentElement);
 
-    var index = indexById(Application.messageList, id);
-
-    var message = Application.messageList[index];
-
-    message.deleted = 'true';
-    deleteMessage(id);
+    deleteMessage(currentElement);
 }
 
 function idFromElement(element) {
@@ -166,8 +169,8 @@ function onItemClickToEdit(element) {
 
     var message = Application.messageList[index];
 
-    message.edited = 'true';
-    if (message.deleted == 'true') {
+    message.edited = true;
+    if (message.deleted) {
         return;
     }
 
@@ -178,7 +181,17 @@ function loadMessages(done) {
     var url = Application.mainUrl + '?token=' + Application.token;
     ajax('GET', url, null, function (responseText) {
         var response = JSON.parse(responseText);
-        Application.messageList = response.messages;
+        Application.token = response.token;
+
+        if (response.messages.length > 0) {
+
+            if (Application.messageList.length == 0) {
+                Application.messageList = response.messages;
+            }
+
+            Application.messageListForResponse = response.messages;
+        }
+
         done();
     });
 }
@@ -201,7 +214,9 @@ function ajax(method, url, data, continueWith) {
             connect();
             return;
         }
-        continueWith(xhr.responseText);
+        if (continueWith != null) {
+            continueWith(xhr.responseText);
+        }
     };
 
     var errorIcon = document.getElementById('errorIcon');
@@ -234,14 +249,7 @@ function onSendButtonClick() {
     if (textMessage == "" || textMessage == null)
         return;
 
-    var message;
-
-    if (Application.messageList.length == 0) {
-        message = newMessage(name, textMessage, getTime(), false, false, false);
-    }
-    else {
-        message = newMessage(name, textMessage, getTime(), false, false, false);
-    }
+    var message = newMessage(name, textMessage, getTime(), false, false, false);
 
     addMessage(message);
 }
@@ -262,16 +270,14 @@ function textValue() {
 }
 
 function updateList(list, messageMap) {
-    var children = list.children;
-    var notFound = [];
+    var children = list.children; // HTML object
 
     for (var i = 0; i < children.length; i++) {
-        var child = children[i];
-        var id = child.attributes['data-message-id'].value;
+        var child = children[i]; //html
+        var id = child.attributes['data-message-id'].value; //what we have at the page
         var item = messageMap[id];
 
         if (item == null) {
-            notFound.push(child);
             continue;
         }
 
@@ -279,8 +285,6 @@ function updateList(list, messageMap) {
 
         messageMap[id] = null;
     }
-
-    return notFound;
 }
 
 function appendToList(list, messageList, messageMap) {
@@ -296,13 +300,14 @@ function appendToList(list, messageList, messageMap) {
 
         renderMessageState(child, message);
         list.appendChild(child);
+
     }
 }
 
 function render(root) {
     var list = document.getElementsByClassName('listMessage')[0];
 
-    var messagesMap = root.messageList.reduce(function (accumulator, message) {
+    var messagesMap = root.messageListForResponse.reduce(function (accumulator, message) {
         accumulator[message.id] = message;
 
         return accumulator;
@@ -310,7 +315,7 @@ function render(root) {
 
     updateList(list, messagesMap);
 
-    appendToList(list, root.messageList, messagesMap);
+    appendToList(list, root.messageListForResponse, messagesMap);
 }
 
 function caseDeletedMessage(element, message) {
@@ -321,6 +326,7 @@ function caseDeletedMessage(element, message) {
 }
 
 function renderMessageState(element, message) {
+
     element.setAttribute('data-message-id', message.id);
 
     if(message.name == name) {
@@ -331,17 +337,17 @@ function renderMessageState(element, message) {
         deleteIcon.style.visibility = "visible";
     }
 
-    if (message.deleted == 'true') {
+    if (message.deleted) {
         caseDeletedMessage(element, message);
     }
     else {
         element.firstChild.textContent = "[" + message.timestamp + "]" + " " + message.name + " ";
         element.lastChild.textContent = message.text + " ";
 
-        if (message.edited == 'true') {
+        if (message.edited) {
             var editedIcon = element.getElementsByClassName('editedIcon')[0];
             editedIcon.style.visibility = "visible";
-            message.wasEdited = 'true';
+            message.wasEdited = true;
         }
     }
 }
