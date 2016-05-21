@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="welcomePageBody">
-    <form class="userForm" action="/chat" method="post">
+    <form class="userForm" action="/login" method="post">
         <div>
             <label style="color: white">Username</label>
             <input class="inputLoginPassword" type="text" name="username">

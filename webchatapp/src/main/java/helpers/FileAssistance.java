@@ -56,7 +56,8 @@ public class FileAssistance {
     private static User getUserFromJSONObject(JSONObject jsonObject) {
         String login = (String)jsonObject.get("login");
         String password = (String)jsonObject.get("password");
-        return new User(login, password);
+        String id = (String)jsonObject.get("id");
+        return new User(login, password, id);
     }
 }
 

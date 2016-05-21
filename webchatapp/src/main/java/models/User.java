@@ -5,19 +5,40 @@ package main.java.models;
  */
 public class User {
 
-    String name;
+    String username;
     String password;
+    String id;
 
-    public User(String name, String password) {
-        this.name = name;
-        this.password = password;
+    public User() {
+        this.username = "";
+        this.password = "";
+        this.id = "";
     }
 
-    public String getName() {
-        return name;
+    public User(String username, String password, String id) {
+        this.username = username;
+        this.password = password;
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
         return password;
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getId() {
+        return id;
+    }
 }
+

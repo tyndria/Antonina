@@ -87,6 +87,9 @@ function delegateEvent(evtObj) {
     if (evtObj.type === 'click' && evtObj.target.classList.contains('buttonSend')) {
         onSendButtonClick(evtObj);
     }
+    if (evtObj.keyCode == 13) {
+        onSendButtonClick(evtObj);
+    }
 }
 
 function onOkButtonClick() {
@@ -255,6 +258,9 @@ function onSendButtonClick() {
 }
 
 function addMessage(message) {
+
+    checkScroll();
+
     ajax('POST', Application.mainUrl, JSON.stringify(message), function () {
         Application.messageList.push(message);
     });
@@ -304,6 +310,12 @@ function appendToList(list, messageList, messageMap) {
     }
 }
 
+function checkScroll() {
+    var sectionHistory = document.getElementsByClassName('sectionHistory')[0];
+
+    sectionHistory.scrollTop = sectionHistory.scrollHeight;
+}
+
 function render(root) {
     var list = document.getElementsByClassName('listMessage')[0];
 
@@ -344,10 +356,9 @@ function renderMessageState(element, message) {
         element.firstChild.textContent = "[" + message.timestamp + "]" + " " + message.name + " ";
         element.lastChild.textContent = message.text + " ";
 
-        if (message.edited) {
+        if (message.edited && message.text != '') {
             var editedIcon = element.getElementsByClassName('editedIcon')[0];
             editedIcon.style.visibility = "visible";
-            message.wasEdited = true;
         }
     }
 }
