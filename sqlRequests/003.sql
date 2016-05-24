@@ -1,0 +1,1 @@
+select * from messages where idUsers = 1 and date = '2016-05-09';

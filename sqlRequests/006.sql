@@ -1,0 +1,1 @@
+select users.name, users.id from users inner join messages on users.id = messages.idUsers;

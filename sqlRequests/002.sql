@@ -1,0 +1,1 @@
+select * from messages where idUsers = 1;
