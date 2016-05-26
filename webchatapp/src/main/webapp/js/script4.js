@@ -72,18 +72,12 @@ function setUserName() {
     if (name === 'null' || name == 'undefined')
         name = "Guest";
 
-    var inputName = document.getElementById('name');
-    inputName.setAttribute('placeholder', name);
-
     var inputMessage = document.getElementById('message');
     inputMessage.setAttribute('placeholder', name + ', enter you message');
 }
 
 
 function delegateEvent(evtObj) {
-    if (evtObj.type === 'click' && evtObj.target.classList.contains('buttonOk')) {
-        onOkButtonClick(evtObj);
-    }
     if (evtObj.type === 'click' && evtObj.target.classList.contains('buttonSend')) {
         onSendButtonClick(evtObj);
     }
@@ -92,18 +86,6 @@ function delegateEvent(evtObj) {
     }
 }
 
-function onOkButtonClick() {
-    var nameItem = document.getElementById('name');
-    if (!nameItem.value)
-        return;
-    name = nameItem.value;
-
-    nameItem.style.color = 'blue';
-    nameItem.style.fontStyle = 'italic';
-
-    var inputMessage = document.getElementById('message');
-    inputMessage.setAttribute('placeholder', name + ', enter you message');
-}
 
 function editMessage(element) {
     var id = idFromElement(element);
@@ -186,6 +168,9 @@ function loadMessages(done) {
         var response = JSON.parse(responseText);
         Application.token = response.token;
 
+        name = response.username;
+        setUserName();
+
         if (response.messages.length > 0) {
 
             if (Application.messageList.length == 0) {
@@ -259,8 +244,6 @@ function onSendButtonClick() {
 
 function addMessage(message) {
 
-    checkScroll();
-
     ajax('POST', Application.mainUrl, JSON.stringify(message), function () {
         Application.messageList.push(message);
     });
@@ -307,11 +290,14 @@ function appendToList(list, messageList, messageMap) {
         renderMessageState(child, message);
         list.appendChild(child);
 
+        checkScroll();
+
     }
 }
 
 function checkScroll() {
-    var sectionHistory = document.getElementsByClassName('sectionHistory')[0];
+
+    var sectionHistory = document.getElementById('sectionHistory');
 
     sectionHistory.scrollTop = sectionHistory.scrollHeight;
 }

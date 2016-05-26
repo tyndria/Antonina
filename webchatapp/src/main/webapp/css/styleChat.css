@@ -27,20 +27,19 @@ li, ul {
     color: white;
     padding: 0.5em;
     border-radius: 4px;
-    font-size: 3em;
+    font-size: 3.5em;
     text-align: center;
 }
 
 .chatContainer {
     height: 100%;
-    position: relative;
+    margin: auto;
 }
 
 .sectionActions {
     height: 7%;
-    width: 70%;
-    margin: auto;
-    position: relative;
+    width: 30%;
+    float: right;
 }
 
 .buttonActions  {
@@ -76,18 +75,19 @@ li, ul {
     background-color: darkgrey;
     color: white;
     border-radius: 8px;
-    width: 60px;
-    height: 30px;
-    font-size: 0.8em;
+    width: 70px;
+    height: 35px;
+    font-size: 0.9em;
+    margin: 5px;
 }
 
 .buttonSend {
     background-color: darkgrey;
     color: white;
     border-radius: 8px;
-    width: 60px;
-    height: 30px;
-    font-size: 0.8em;
+    width: 70px;
+    height: 35px;
+    font-size: 0.9em;
 }
 
 .labelClass {

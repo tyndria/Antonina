@@ -15,7 +15,7 @@
 
     <error-page>
         <error-code>404</error-code>
-        <location>/main/webapp/html/notfound.html</location>
+        <location>/html/notfound.html</location>
     </error-page>
 
 </web-app>

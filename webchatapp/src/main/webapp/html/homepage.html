@@ -11,12 +11,12 @@
     <main class = "chatContainer">
         <header class = "header">Alone programmers's chat</header>
         <div class ="sectionActions">
-            <img src="http://findicons.com/files/icons/2443/bunch_of_cool_bluish_icons/256/edit.png" width="20" height="20">
-            <input id = "name" type = "text" class = "inputName">
-            <button id = "enterName" type = "button" class = "buttonOk">Ok</button>
-            <img id="errorIcon"class="icon" src="https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png" width="25" height="25" align="right" style="padding: 5px">
+            <img id="errorIcon"class="icon" src="https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png" width="25" height="25" align="left" style="padding: 5px">
+            <form action="/logout" method="get">
+                <button id = "enterName" type="submit" class = "buttonOk">Log off</button>
+            </form>
         </div>
-        <div class = "sectionHistory">
+        <div class = "sectionHistory" id = "sectionHistory">
             <ul id="listMessage" class="listMessage" >
 
             </ul>

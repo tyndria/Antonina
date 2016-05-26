@@ -1,1 +1,0 @@
-[{"login":"tyndria", "password":"0ddb5877c896f43e8734e10b001e7f1eb92889cd"}, {"login":"jjkd", "password":"43545"}]

@@ -1,5 +1,6 @@
 package main.java.servlets;
 
+
 import common.Message;
 import logging.Log;
 import org.json.simple.parser.ParseException;
@@ -40,7 +41,7 @@ public class ChatServlet extends HttpServlet {
         int index = MessageHelper.parseToken(token);
         Portion portion = new Portion(index, messageStorage.size());
         List<Message> messages = messageStorage.getPortion(portion);
-        String responseBody = MessageHelper.buildServerResponseBody(messages, messageStorage.size());
+        String responseBody = MessageHelper.buildServerResponseBody(messages, messageStorage.size(), (String)req.getSession().getAttribute("username"));
         resp.getWriter().println(responseBody);
     }
 

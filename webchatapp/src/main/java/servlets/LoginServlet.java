@@ -29,7 +29,8 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        String path = getServletContext().getRealPath("/") + "usersFile.txt";
+        String realPath = getServletContext().getRealPath("/");
+        String path = realPath.substring(0, realPath.length() - 18) + "src\\main\\resources\\usersFile.txt";
         usersArrayList = FileAssistance.getLoginHistory(path);
     }
 
@@ -63,6 +64,7 @@ public class LoginServlet extends HttpServlet {
         String id = isUserFound(user);
         if (id != null) {
             req.getSession().setAttribute("id", id);
+            req.getSession().setAttribute("username", login);
             resp.sendRedirect("html/homepage.html");
         } else {
             req.setAttribute("errorMsg", "You entered wrong password or login");
