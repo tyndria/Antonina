@@ -1,4 +1,7 @@
 # Antonina
 
-Project "UI/src/by/bsu/chat": if there is an error with the server, you should wait about 2 seconds and then you see error icon. 
-To work with UI you should use last verstion of MessageStorage
+TO RUN LAB №12
+1. Use jar Message Storage
+2. Create or download file "messages.srg" and put it in "C:\Apache\apache-tomcat-8.0.33\bin"
+3. LOGIN : tyndria
+4. PASSWORD: 8888
