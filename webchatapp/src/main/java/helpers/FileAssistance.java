@@ -1,6 +1,6 @@
-package main.java.helpers;
+package helpers;
 
-import main.java.models.User;
+import models.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

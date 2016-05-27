@@ -1,4 +1,4 @@
-package main.java.servlets;
+package servlets;
 
 
 import common.Message;

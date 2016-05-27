@@ -1,8 +1,8 @@
-package main.java.filters;
+package filters;
 
-import main.java.helpers.FileAssistance;
-import main.java.helpers.Hashcode;
-import main.java.models.User;
+import helpers.FileAssistance;
+import helpers.Hashcode;
+import models.User;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 @WebFilter(urlPatterns = {
         "/chat",
-        "/webapp/html/homepage.html"
+        "/html/homepage.html"
 })
 
 public class AuthenticationFilter implements Filter {

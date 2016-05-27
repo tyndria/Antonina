@@ -1,12 +1,12 @@
-package main.java.servlets;
+package servlets;
 
 /**
  * Created by Антонина on 17.05.16.
  */
 
-import main.java.helpers.FileAssistance;
-import main.java.helpers.Hashcode;
-import main.java.models.User;
+import helpers.FileAssistance;
+import helpers.Hashcode;
+import models.User;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
